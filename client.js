@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((bold) => bold.json())
       .then((data) => {
-        console.log(data);
+        listfVideosElm.prepend(getSingleVidoReq(data));
       });
   });
 });
