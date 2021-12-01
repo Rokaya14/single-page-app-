@@ -10,9 +10,11 @@ function getSingleVidoReq(videoInfo) {
         </p>
       </div>
       <div class="d-flex flex-column text-center">
-        <a class="btn btn-link">🔺</a>
-        <h3>0</h3>
-        <a class="btn btn-link">🔻</a>
+        <a id="votes_ups_${videoInfo._id}" class="btn btn-link">🔺</a>
+        <h3 id="score_vote_${videoInfo._id}">${
+    videoInfo.votes.ups - videoInfo.votes.downs
+  }</h3>
+        <a id="votes_downs_${videoInfo._id}"class="btn btn-link">🔻</a>
       </div>
     </div>
     <div class="card-footer d-flex flex-row justify-content-between">
@@ -41,7 +43,36 @@ document.addEventListener("DOMContentLoaded", function () {
     .then((blob) => blob.json())
     .then((data) =>
       data.forEach((videoInfo) => {
-        listfVideosElm.appendChild(getSingleVidoReq(videoInfo));
+        listfVideosElm.appendChild(getSingleVidoReq(videoInfo)); //  after appending this element we can select any elemnt on it
+        //update vote score
+        const votesUpsElm = document.getElementById(
+          `votes_ups_${videoInfo._id}`
+        );
+        const votesDownsElm = document.getElementById(
+          `votes_downs_${videoInfo._id}`
+        );
+
+        const scoreVoreElm = document.getElementById(
+          `score_vote_${videoInfo._id}`
+        );
+        votesDownsElm.addEventListener("click", (e) => {
+          fetch("http://localhost:7777/video-request/vote", {
+            method: "PUT",
+            headers: { "content-Type": "application/json" },
+            body: JSON.stringify({ id: videoInfo._id, vote_type: "downs" }),
+          })
+            .then((bolb) => bolb.json())
+            .then((data) => (scoreVoreElm.innerText = data.ups - data.downs));
+        });
+        votesUpsElm.addEventListener("click", (e) => {
+          fetch("http://localhost:7777/video-request/vote", {
+            method: "PUT",
+            headers: { "content-Type": "application/json" },
+            body: JSON.stringify({ id: videoInfo._id, vote_type: "ups" }),
+          })
+            .then((bolb) => bolb.json())
+            .then((data) => (scoreVoreElm.innerText = data.ups - data.downs));
+        });
       })
     );
 
