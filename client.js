@@ -40,9 +40,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const listfVideosElm = document.getElementById("listOfRequests");
 
   fetch("http://localhost:7777/video-request")
-    .then((blob) => blob.json())
+    .then((res) => res.json())
     .then((data) =>
-      data.forEach((videoInfo) => {
+      data.map((videoInfo) => {
         listfVideosElm.appendChild(getSingleVidoReq(videoInfo)); //  after appending this element we can select any elemnt on it
         //update vote score
         const votesUpsElm = document.getElementById(
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: { "content-Type": "application/json" },
             body: JSON.stringify({ id: videoInfo._id, vote_type: "downs" }),
           })
-            .then((bolb) => bolb.json())
+            .then((res) => res.json())
             .then((data) => (scoreVoreElm.innerText = data.ups - data.downs));
         });
         votesUpsElm.addEventListener("click", (e) => {
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: { "content-Type": "application/json" },
             body: JSON.stringify({ id: videoInfo._id, vote_type: "ups" }),
           })
-            .then((bolb) => bolb.json())
+            .then((res) => res.json())
             .then((data) => (scoreVoreElm.innerText = data.ups - data.downs));
         });
       })
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
       method: "POST",
       body: formData,
     })
-      .then((bold) => bold.json())
+      .then((res) => res.json())
       .then((data) => {
         listfVideosElm.prepend(getSingleVidoReq(data));
       });

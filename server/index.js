@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (req, res) =>
   res.send("Welcome to  APIs, use /video-request to get data")
 );
-const upload = multer();
+const upload = multer(); // to make server accept data from multer form
 app.post("/video-request", upload.none(), async (req, res, next) => {
   const response = await VideoRequestData.createRequest(req.body);
   res.send(response);
@@ -26,18 +26,6 @@ app.post("/video-request", upload.none(), async (req, res, next) => {
 app.get("/video-request", async (req, res, next) => {
   const data = await VideoRequestData.getAllVideoRequests();
   res.send(data);
-  next();
-});
-
-app.get("/users", async (req, res, next) => {
-  const response = await UserData.getAllUsers(req.body);
-  res.send(response);
-  next();
-});
-
-app.post("/users/login", async (req, res, next) => {
-  const response = await UserData.createUser(req.body);
-  res.redirect(`http://localhost:5500?id=${response._id}`);
   next();
 });
 
@@ -63,7 +51,17 @@ app.delete("/video-request", async (req, res, next) => {
   res.send(response);
   next();
 });
+app.get("/users", async (req, res, next) => {
+  const response = await UserData.getAllUsers(req.body);
+  res.send(response);
+  next();
+});
 
+app.post("/users/login", async (req, res, next) => {
+  const response = await UserData.createUser(req.body);
+  res.redirect(`http://localhost:5500?id=${response._id}`);
+  next();
+});
 app.listen(port, () =>
   console.log(`Example app listening at http://localhost:${port}`)
 );
